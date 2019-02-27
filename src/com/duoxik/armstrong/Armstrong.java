@@ -42,13 +42,13 @@ public class Armstrong {
         return getArmstrongListByDegree(endIndex, 1, Long.toString(endIndex).length());
     }
 
-    public static List<Long> getArmstrongListParallel(final long endIndx) throws InterruptedException, ExecutionException {
+    public static List<Long> getArmstrongListParallel(final long endIndex) throws InterruptedException, ExecutionException {
 
         List<Long> resultList = new ArrayList<>(100);
 
-        if (endIndx <= 0) return resultList;
+        if (endIndex <= 0) return resultList;
 
-        int endDegree = Long.toString(endIndx).length();
+        int endDegree = Long.toString(endIndex).length();
 
         if (endDegree > 12) {
 
@@ -58,7 +58,7 @@ public class Armstrong {
             futures.add(executorService.submit(new Callable<List<Long>>() {
                 @Override
                 public List<Long> call() {
-                    return Armstrong.getArmstrongListByDegree(endIndx, 1, 12);
+                    return Armstrong.getArmstrongListByDegree(endIndex, 1, 12);
                 }
             }));
 
@@ -69,7 +69,7 @@ public class Armstrong {
                 futures.add(executorService.submit(new Callable<List<Long>>() {
                     @Override
                     public List<Long> call() {
-                        return Armstrong.getArmstrongListByDegree(endIndx, degree, degree);
+                        return Armstrong.getArmstrongListByDegree(endIndex, degree, degree);
                     }
                 }));
             }
@@ -78,7 +78,7 @@ public class Armstrong {
                 resultList.addAll(future.get());
 
         } else {
-            resultList = getArmstrongListByDegree(endIndx, 1, endDegree);
+            resultList = getArmstrongListByDegree(endIndex, 1, endDegree);
         }
 
         return resultList;
