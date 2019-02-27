@@ -22,9 +22,13 @@ public class Armstrong {
         for (int degree = 0; degree < MAX_NUMBER_LENGTH; degree++)
             TABLE_DEGREE[1][degree] = 1;
 
-        for (int currentNum = 2; currentNum < TABLE_DEGREE.length; currentNum++)
-            for (int degree = 0; degree < MAX_NUMBER_LENGTH; degree++)
-                TABLE_DEGREE[currentNum][degree] = (long) Math.pow(currentNum, degree);
+        for (int currentNum = 2; currentNum < TABLE_DEGREE.length; currentNum++) {
+            for (int degree = 0; degree < MAX_NUMBER_LENGTH; degree++) {
+                TABLE_DEGREE[currentNum][degree] = currentNum;
+                for (int i = 1; i < degree; i++)
+                    TABLE_DEGREE[currentNum][degree] = TABLE_DEGREE[currentNum][degree] * currentNum;
+            }
+        }
 
         MAX_NUM_OF_DEGREE[0] = 0;
         MAX_NUM_OF_DEGREE[19] = Long.MAX_VALUE;
@@ -33,9 +37,9 @@ public class Armstrong {
             MAX_NUM_OF_DEGREE[degree] = MAX_NUM_OF_DEGREE[degree - 1] * 10 + 9;
     }
 
-    public static List<Long> getArmstrongList(long endIndx) {
+    public static List<Long> getArmstrongList(long endIndex) {
 
-        return getArmstrongListByDegree(endIndx, 1, Long.toString(endIndx).length());
+        return getArmstrongListByDegree(endIndex, 1, Long.toString(endIndex).length());
     }
 
     public static List<Long> getArmstrongListParallel(final long endIndx) throws InterruptedException, ExecutionException {
@@ -80,7 +84,7 @@ public class Armstrong {
         return resultList;
     }
 
-    private static List<Long> getArmstrongListByDegree(long endIndx, int startDegree, int endDegree) {
+    private static List<Long> getArmstrongListByDegree(long endIndex, int startDegree, int endDegree) {
 
         List<Long> resultList = new ArrayList<>();
 
@@ -88,11 +92,11 @@ public class Armstrong {
 
             long currentNumber = 1;
 
-            while ((currentNumber < endIndx) && (currentNumber <= MAX_NUM_OF_DEGREE[degree])) {
+            while ((currentNumber < endIndex) && (currentNumber <= MAX_NUM_OF_DEGREE[degree])) {
 
                 long armstrongNumber = getArmstrongNumber(currentNumber, degree);
 
-                if (armstrongNumber != -1 && armstrongNumber < endIndx)
+                if (armstrongNumber != -1 && armstrongNumber < endIndex)
                     resultList.add(armstrongNumber);
 
                 currentNumber = getNextNum(currentNumber);
@@ -132,13 +136,13 @@ public class Armstrong {
 
     private static long getArmstrongNumber(long N, int degree) {
 
-        long armSumm = getArmstrongSumm(N, degree);
+        long armSumm = getArmstrongSum(N, degree);
         return (armSumm != -1
                 && isArmstrongNumber(armSumm)
                 && isDegreeNumber(armSumm, degree)) ? armSumm : -1;
     }
 
-    private static long getArmstrongSumm(long N, int degree) {
+    private static long getArmstrongSum(long N, int degree) {
 
         long currentNumber = N;
         long result = 0;
@@ -162,6 +166,6 @@ public class Armstrong {
     private static boolean isArmstrongNumber(long N) {
 
         int degree = Long.toString(N).length();
-        return getArmstrongSumm(N, degree) == N ? true : false;
+        return getArmstrongSum(N, degree) == N ? true : false;
     }
 }
